@@ -1,1 +1,7 @@
-<p>annotations-layer works!</p>
+@for (annotation of annotationsForPage(); track annotation.id) {
+  <app-annotation
+    [annotation]="annotation"
+    (updated)="updateAnnotation($event)"
+    (delete)="deleteAnnotation($event)"
+  />
+}

@@ -1,1 +1,18 @@
-<p>annotation works!</p>
+@switch (state()) {
+  @case (AnnotationState.Editing) {
+    <textarea [(ngModel)]="annotation().text"></textarea>
+
+    <button class="btn-save" (click)="saveAnnotation(); $event.stopPropagation()">
+      <span>Сохранить</span>
+    </button>
+  }
+  @default {
+    <span class="annotation-text">{{annotation().text}}</span>
+  }
+}
+
+@if (state() !== AnnotationState.Idle) {
+  <button class="btn-close" (click)="deleteAnnotation(); $event.stopPropagation()">
+    <span>X</span>
+  </button>
+}

@@ -26,6 +26,14 @@ export class DocumentPageComponent {
     effect(() => {
       this.stateService.setCurrentImgDocumentId(this.imgDocumentId());
     });
+
+    effect(() => {
+      this.annotationService.loadAnnotations(this.imgDocumentId());
+    });
+  }
+
+  protected saveAnnotations() {
+    this.annotationService.saveAnnotations(this.imgDocumentId());
   }
 
   protected scaleUp() {
