@@ -1,44 +1,27 @@
-import {Injectable, signal} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {Annotation} from '../models/annotation';
 import {AnnotationsCache} from '../models/annotations-cache';
+import {DocumentAnnotationStorageService} from './document-annotation-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentAnnotationService {
-  private readonly STORAGE_KEY = 'annotations';
-
-  private cache: AnnotationsCache = {};
-
+  private storage = inject(DocumentAnnotationStorageService);
   private _annotations = signal<Annotation[]>([]);
 
   annotations = this._annotations.asReadonly();
 
   loadAnnotations(documentName: string) {
-    try {
-      const rawCache = sessionStorage.getItem(this.STORAGE_KEY);
-      let annotationsForDocument: Annotation[] = [];
+    const annotationsForDocument = this.storage.getAnnotationsForDocument(documentName);
 
-      if (!rawCache) {
-        return;
-      }
-
-      this.cache = JSON.parse(rawCache) as AnnotationsCache;
-      annotationsForDocument = this.cache[documentName] || [];
-
-      this._annotations.set(annotationsForDocument);
-    } catch (error) {
-      console.error(`Failed to load annotations from session storage for document ${documentName}`, error);
-      this._annotations.set([]);
-    }
+    this._annotations.set(annotationsForDocument);
   }
 
   saveAnnotations(documentName: string) {
     console.table(this._annotations());
 
-    this.cache[documentName] = this._annotations();
-
-    sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.cache));
+    this.storage.saveAnnotationsForDocument(documentName, this._annotations());
   }
 
   createAnnotation(annotation: Annotation) {
