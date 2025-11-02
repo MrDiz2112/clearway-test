@@ -1,6 +1,6 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {DocumentApiService} from './document-api.service';
-import {Document, emptyDocument} from '../models/document';
+import {ImgDocument, emptyImgDocument} from '../models/img-document';
 import {rxResource} from '@angular/core/rxjs-interop';
 
 @Injectable({
@@ -11,12 +11,16 @@ export class DocumentStateService {
 
   private currentDocumentId = signal<string>('');
 
-  private documentResource = rxResource<Document, string>({
+  private documentResource = rxResource<ImgDocument, string>({
     params: () => this.currentDocumentId(),
     stream: ({params}) => this.data.getDocumentById(params),
-    defaultValue: emptyDocument,
+    defaultValue: emptyImgDocument,
   })
 
-  currentDocument = this.documentResource.value;
+  currentImgDocument = this.documentResource.value;
   currentDocumentStatus = this.documentResource.status;
+
+  setCurrentImgDocumentId(id: string) {
+    this.currentDocumentId.set(id);
+  }
 }

@@ -1,4 +1,4 @@
-export interface Page {
+export interface ImgPage {
   number: number
   imageUrl: string
 }

@@ -1,0 +1,27 @@
+<header>
+  <h1>{{imgDocument().name}}</h1>
+
+  <div class="scale-control">
+    <button class="scale-down" (click)="scaleDown()">
+      <span>-</span>
+    </button >
+
+    <p class="scale-label">
+      {{scale() * 100}}%
+    </p>
+
+    <button class="scale-up" (click)="scaleUp()">
+      <span>+</span>
+    </button>
+  </div>
+
+  <div class="buttons">
+    <button class="save-annotations">
+      <span>Сохранить аннотации</span>
+    </button>
+  </div>
+</header>
+
+<section class="content">
+  <app-document-viewer [imgDocument]="imgDocument()" [scale]="scale()" />
+</section>

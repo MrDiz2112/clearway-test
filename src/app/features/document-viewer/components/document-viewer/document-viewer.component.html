@@ -1,0 +1,6 @@
+@for (page of imgDocument().pages; track page.number) {
+  <app-img-page
+    style="width:{{scale() * 100}}%;"
+    [imgPage]="page"
+  />
+}
