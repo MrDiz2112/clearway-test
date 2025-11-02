@@ -18,6 +18,8 @@ export class DocumentPageComponent {
   imgDocumentId = input.required<string>();
 
   protected readonly imgDocument = this.stateService.currentImgDocument.asReadonly();
+  protected readonly imgDocumentStatus = this.stateService.currentDocumentStatus;
+
   protected scale = signal(0.5);
 
   constructor() {
