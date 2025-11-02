@@ -3,8 +3,6 @@ import {DocumentViewerComponent} from '../components/document-viewer/document-vi
 import {DocumentStateService} from '../services/document-state.service';
 import {DocumentAnnotationService} from '../services/document-annotation.service';
 
-const EMPTY_DOCUMENT_ID = '';
-
 @Component({
   selector: 'app-document-page',
   imports: [

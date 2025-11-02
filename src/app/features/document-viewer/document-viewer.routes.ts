@@ -1,5 +1,4 @@
 import {Route} from '@angular/router';
-import {DocumentPageComponent} from './pages/document-page.component';
 
 export const DocumentViewerRoutes: Route[] = [
   {

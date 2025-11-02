@@ -1,4 +1,4 @@
-import {Component, computed, DestroyRef, effect, ElementRef, inject, input, output, signal} from '@angular/core';
+import {Component, computed, DestroyRef, ElementRef, inject, input, output, signal} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {Annotation} from '../../models/annotation';
 import {FormsModule} from '@angular/forms';
@@ -21,12 +21,15 @@ enum AnnotationState {
     '(mouseleave)': 'onMouseLeave()',
     '(click)': 'onHostClick($event)',
     '(dblclick)': 'onHostDoubleClick($event)',
+    '[class.editing]': 'state() === AnnotationState.Editing',
     '[style.left.%]': 'positionLeft()',
     '[style.top.%]': 'positionTop()',
   },
 })
 export class AnnotationComponent {
+  private document = inject(DOCUMENT);
   private elementRef = inject(ElementRef<HTMLElement>);
+  private destroyRef = inject(DestroyRef);
 
   annotation = input.required<Annotation>();
 
@@ -34,13 +37,43 @@ export class AnnotationComponent {
   delete = output<Annotation>();
 
   protected state = signal<AnnotationState>(AnnotationState.Idle);
+  private isDragging = signal(false);
 
   protected positionLeft = computed(() => this.annotation().coordinates.x * 100);
   protected positionTop = computed(() => this.annotation().coordinates.y * 100);
 
   protected AnnotationState = AnnotationState;
 
-  constructor() {}
+  constructor() {
+    const onMouseMove = (e: MouseEvent) => this.onMouseMove(e);
+    const onMouseUp = () => this.onMouseUp();
+
+    this.document.addEventListener('mousemove', onMouseMove);
+    this.document.addEventListener('mouseup', onMouseUp);
+
+    this.destroyRef.onDestroy(() => {
+      this.document.removeEventListener('mousemove', onMouseMove);
+      this.document.removeEventListener('mouseup', onMouseUp);
+    });
+  }
+
+  protected onDragStart(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.isDragging.set(true);
+  }
+
+  private onMouseMove(event: MouseEvent) {
+    if (!this.isDragging()) return;
+
+    event.preventDefault();
+    this.updatePosition(event);
+  }
+
+  private onMouseUp() {
+    this.isDragging.set(false);
+  }
 
   protected onHostClick(event: MouseEvent) {
     event.stopPropagation();
@@ -72,7 +105,30 @@ export class AnnotationComponent {
   }
 
   protected updatePosition(event: MouseEvent) {
+    const annotationLayerElement = this.elementRef.nativeElement.parentElement;
 
+    if (!annotationLayerElement) return;
+
+    const annotationLayerRect = annotationLayerElement.getBoundingClientRect();
+
+    let newX = (event.clientX - annotationLayerRect.left) / annotationLayerRect.width;
+    let newY = (event.clientY - annotationLayerRect.top) / annotationLayerRect.height;
+
+    if (newX < 0) newX = 0;
+    if (newX > 1) newX = 1;
+
+    if (newY < 0) newY = 0;
+    if (newY > 1) newY = 1;
+
+    const newAnnotation: Annotation = {
+      ...this.annotation(),
+      coordinates: {
+        x: newX,
+        y: newY,
+      }
+    };
+
+    this.updated.emit(newAnnotation);
   }
 
   protected updateText(text: string) {

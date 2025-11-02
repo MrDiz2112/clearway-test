@@ -1,6 +1,5 @@
 import {Component, input} from '@angular/core';
 import {ImgPage} from '../../models/img-page';
-import {NgOptimizedImage} from '@angular/common';
 import {AnnotationsLayerComponent} from '../annotations-layer/annotations-layer.component';
 
 @Component({

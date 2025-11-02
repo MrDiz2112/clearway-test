@@ -9,8 +9,10 @@
 
   opacity: 0.5;
 
+  max-width: 50%;
+
   &:hover,
-  &.selected {
+  &.editing {
     opacity: 1;
   }
 
@@ -18,34 +20,67 @@
     cursor: pointer;
   }
 
-  &.selected {
-    cursor: text;
+  &.editing {
+    z-index: 20;
   }
 }
 
 .annotation-text {
+  word-break: break-word;
   user-select: none;
 }
 
+textarea {
+  box-sizing: border-box;
+  min-height: 3rem;
+  min-width: 10rem;
+  max-height: 10rem;
+  max-width: 100%;
+}
+
+.btn-save {
+  cursor: pointer;
+}
+
+.btn-drag,
 .btn-close {
   position: absolute;
   top: -0.5rem;
-  left: -0.5rem;
 
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: 1rem;
-  height: 1rem;
   border-radius: 50%;
   border: 1px solid black;
+
+  padding: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+
+  span {
+    line-height: 1;
+    user-select: none;
+  }
+}
+
+.btn-drag {
+  left: -0.5rem;
+  cursor: move;
+
+  span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.btn-close {
+  right: -0.5rem;
+
   background: red;
   color: white;
   cursor: pointer;
-
-  span {
-    user-select: none;
-  }
 }

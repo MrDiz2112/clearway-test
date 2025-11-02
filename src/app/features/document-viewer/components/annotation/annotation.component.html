@@ -1,5 +1,10 @@
 @switch (state()) {
   @case (AnnotationState.Editing) {
+    <button class="btn-drag" (mousedown)="onDragStart($event)">
+      <span>↕</span>
+      <span>↔</span>
+    </button>
+
     <textarea [(ngModel)]="annotation().text"></textarea>
 
     <button class="btn-save" (click)="saveAnnotation(); $event.stopPropagation()">
