@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/clearway-test",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -26,6 +27,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": ".nojekyll",
+                "input": "public",
+                "output": "/"
               }
             ],
             "styles": [
