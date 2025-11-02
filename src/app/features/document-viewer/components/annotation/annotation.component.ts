@@ -3,11 +3,7 @@ import {DOCUMENT} from '@angular/common';
 import {Annotation} from '../../models/annotation';
 import {FormsModule} from '@angular/forms';
 
-enum AnnotationState {
-  Idle,
-  Hover,
-  Editing,
-}
+type AnnotationState  = 'Idle' | 'Hover' | 'Editing';
 
 @Component({
   selector: 'app-annotation',
@@ -21,7 +17,7 @@ enum AnnotationState {
     '(mouseleave)': 'onMouseLeave()',
     '(click)': 'onHostClick($event)',
     '(dblclick)': 'onHostDoubleClick($event)',
-    '[class.editing]': 'state() === AnnotationState.Editing',
+    '[class.editing]': 'state() === "Editing"',
     '[style.left.%]': 'positionLeft()',
     '[style.top.%]': 'positionTop()',
   },
@@ -36,13 +32,12 @@ export class AnnotationComponent {
   updated = output<Annotation>();
   delete = output<Annotation>();
 
-  protected state = signal<AnnotationState>(AnnotationState.Idle);
-  private isDragging = signal(false);
+  protected state = signal<AnnotationState>('Idle');
 
   protected positionLeft = computed(() => this.annotation().coordinates.x * 100);
   protected positionTop = computed(() => this.annotation().coordinates.y * 100);
 
-  protected AnnotationState = AnnotationState;
+  private isDragging = signal(false);
 
   constructor() {
     const onMouseMove = (e: MouseEvent) => this.onMouseMove(e);
@@ -77,8 +72,8 @@ export class AnnotationComponent {
 
   protected onHostClick(event: MouseEvent) {
     event.stopPropagation();
-    if (this.state() === AnnotationState.Hover || this.state() === AnnotationState.Idle) {
-      this.state.set(AnnotationState.Editing);
+    if (this.state() === 'Hover' || this.state() === 'Idle') {
+      this.state.set('Editing');
     }
   }
 
@@ -87,19 +82,19 @@ export class AnnotationComponent {
   }
 
   protected onMouseEnter() {
-    if (this.state() === AnnotationState.Idle) {
-      this.state.set(AnnotationState.Hover);
+    if (this.state() === 'Idle') {
+      this.state.set('Hover');
     }
   }
 
   protected onMouseLeave() {
-    if (this.state() === AnnotationState.Hover) {
-      this.state.set(AnnotationState.Idle);
+    if (this.state() === 'Hover') {
+      this.state.set('Idle');
     }
   }
 
   protected saveAnnotation() {
-    this.state.set(AnnotationState.Idle);
+    this.state.set('Idle');
 
     this.updateText(this.annotation().text);
   }

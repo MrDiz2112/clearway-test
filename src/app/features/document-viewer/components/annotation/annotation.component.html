@@ -1,5 +1,5 @@
 @switch (state()) {
-  @case (AnnotationState.Editing) {
+  @case ('Editing') {
     <button class="btn-drag" (mousedown)="onDragStart($event)">
       <span>↕</span>
       <span>↔</span>
@@ -16,7 +16,7 @@
   }
 }
 
-@if (state() !== AnnotationState.Idle) {
+@if (state() !== 'Idle') {
   <button class="btn-close" (click)="deleteAnnotation(); $event.stopPropagation()">
     <span>X</span>
   </button>
